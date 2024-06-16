@@ -1,0 +1,12 @@
+<aiml version="1.0.1" encoding="UTF-8">
+
+<!-- Machine Learning Patterns -->
+<category>
+    <pattern>* IS MY FATHER</pattern>
+    <template>say my greetings to Mr. <set name = "father"><star/></set></template>
+</category>
+<category>
+    <pattern>* IS MY Mother</pattern>
+    <template>say my greetings to Mrs. <set name = "mother"><star/></set></template>
+</category>
+</aiml>

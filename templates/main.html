@@ -1,0 +1,188 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A.T.O.M</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="center-box">
+    <div class="animated-border-box-glow"></div>
+    <div class="animated-border-box">
+      <!-- Top-left navigation -->
+      <div class="top-left-navigation">
+        {% if user.is_authenticated %}
+          <a style="color:white;font-size: larger;position:absolute;padding-left: 3%;padding-top: 50%;" href="logout">Logout</a>
+        {% else %}
+          <a style="color:white;" href="login">Login</a>
+          <a style="color:white;" href="register">Register</a>
+        {% endif %}
+      </div>
+
+      <!-- Chatbot Section -->
+      <div class="chat-container">
+        <div class="chat-log" id="chat-log">
+          <ul class="messages-list">
+            <!-- Display initial message -->
+            <li class="message received">
+              <div class="message-text">
+                <div class="message-content">
+                  Hi {{ user.username }}, I am A.T.O.M, your AI chatbot. You can ask me anything.
+                </div>
+                <div class="message-sender">
+                  <b>A.T.O.M</b>
+                </div>
+              </div>
+            </li>
+            {% for chat in chats %}
+              {% if chat.user == request.user %}
+                <li class="message sent">
+                  <div class="message-text">
+                    <div class="message-content">
+                      {{ chat.message }}
+                    </div>
+                    <div class="message-sender">
+                      <b>You</b>
+                    </div>
+                  </div>
+                </li>
+              {% else %}
+                <li class="message received">
+                  <div class="message-text">
+                    <div class="message-content">
+                      {% if chat.response|safe %}
+                        {% if chat.response|safe|slice:":4" == '<img' %}
+                          <div class="image-response">
+                            {{ chat.response|safe }}
+                          </div>
+                        {% else %}
+                          {{ chat.response }}
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                    <div class="message-sender">
+                      <b>A.T.O.M</b>
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="user-input-container">
+          <form class="message-form">
+            {% csrf_token %}
+            <input type="text" class="message-input" placeholder="Type your message..." autofocus>
+            <button type="submit">Send</button>
+          </form>
+        </div>
+      </div>
+      <!-- End of Chatbot Section -->
+    </div>
+  </div>
+
+  <script src="{% static 'script.js' %}"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const messagesList = document.querySelector('.messages-list');
+      const messageForm = document.querySelector('.message-form');
+      const messageInput = document.querySelector('.message-input');
+  
+      function scrollToBottom() {
+        messagesList.scrollTop = messagesList.scrollHeight;
+      }
+  
+      function addMessageToChat(message, isSent) {
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message', isSent ? 'sent' : 'received');
+  
+        const messageText = document.createElement('div');
+        messageText.classList.add('message-text');
+  
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message-content');
+        messageText.appendChild(messageContent);
+  
+        const messageSender = document.createElement('div');
+        messageSender.classList.add('message-sender');
+        messageSender.innerHTML = '<b>' + (isSent ? 'You' : 'A.T.O.M') + '</b>';
+        messageText.appendChild(messageSender);
+  
+        messageItem.appendChild(messageText);
+        messagesList.appendChild(messageItem);
+  
+        // Typing effect
+        const typingEffect = document.createElement('span');
+        typingEffect.classList.add('typing-effect');
+        messageContent.appendChild(typingEffect);
+  
+        const characters = message.split('');
+        let index = 0;
+        const typingInterval = setInterval(() => {
+          typingEffect.textContent += characters[index];
+          index++;
+          if (index === characters.length) {
+            clearInterval(typingInterval);
+            scrollToBottom();
+          }
+        }, 50);
+      }
+  
+      messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+  
+        const message = messageInput.value.trim();
+        if (message.length === 0) {
+          return;
+        }
+  
+        addMessageToChat(message, true);
+        messageInput.value = '';
+  
+        fetch('', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'message': message
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            const response = data.response;
+            addMessageToChat(response, false);
+          });
+      });
+  
+      function scrollToRecentResponses() {
+        messagesList.scrollTop = messagesList.scrollHeight;
+      }
+  
+      scrollToRecentResponses();
+    });
+    
+    // Typewriter effect for the initial message and bot responses
+    const messages = document.querySelectorAll('.message-content');
+    messages.forEach(message => {
+      const messageText = message.innerText;
+      message.innerText = '';
+  
+      const typingEffect = document.createElement('span');
+      typingEffect.classList.add('typing-effect');
+      message.appendChild(typingEffect);
+  
+      const characters = messageText.split('');
+      let index = 0;
+      const typingInterval = setInterval(() => {
+        typingEffect.textContent += characters[index];
+        index++;
+        if (index === characters.length) {
+          clearInterval(typingInterval);
+        }
+      }, 50);
+    });
+  </script>
+</body>
+</html>

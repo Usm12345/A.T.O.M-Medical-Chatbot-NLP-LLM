@@ -1,0 +1,162 @@
+{% block title %}Register{% endblock %}
+
+{% block styles %}
+<style>
+  body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+  .register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .card {
+    max-width: 400px;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .card-header {
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  .card-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type=text], input[type=password] {
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    background-color: #282828;
+    color: #ffffff;
+    position: relative;
+  }
+  .eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #cccccc;
+  }
+  button[type=submit] {
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  button[type=submit]:hover {
+    background-color: #0056b3;
+  }
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+  }
+  
+  /* Add attractive and eye-catching animations */
+  .card {
+    animation: fade-in 0.5s ease;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+  <div class="card">
+    <div class="card-header">Register</div>
+    <div class="card-body">
+      {% if error_message %}
+        <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password1">Password</label>
+          <input type="password" class="form-control" id="password1" name="password1" required>
+          <i class="eye-icon fas fa-eye-slash" id="password1-toggle"></i>
+        </div>
+        <div class="form-group">
+          <label for="password2">Confirm Password</label>
+          <input type="password" class="form-control" id="password2" name="password2" required>
+          <i class="eye-icon fas fa-eye-slash" id="password2-toggle"></i>
+        </div>
+        <button type="submit">Register</button>
+      </form>
+      <p>Already have an account? <a href="{{ login_url }}">Login</a></p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+<script>
+  // Toggle password visibility
+  const password1Toggle = document.getElementById('password1-toggle');
+  const password2Toggle = document.getElementById('password2-toggle');
+  const password1Field = document.getElementById('password1');
+  const password2Field = document.getElementById('password2');
+
+  password1Toggle.addEventListener('click', function () {
+    const type = password1Field.getAttribute('type') === 'password' ? 'text' : 'password';
+    password1Field.setAttribute('type', type);
+    password1Toggle.classList.toggle('fa-eye-slash');
+    password1Toggle.classList.toggle('fa-eye');
+  });
+
+  password2Toggle.addEventListener('click', function () {
+    const type = password2Field.getAttribute('type') === 'password' ? 'text' : 'password';
+    password2Field.setAttribute('type', type);
+    password2Toggle.classList.toggle('fa-eye-slash');
+    password2Toggle.classList.toggle('fa-eye');
+  });
+</script>
+{% endblock %}

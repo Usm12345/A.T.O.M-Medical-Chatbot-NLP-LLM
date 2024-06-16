@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+  
+
+<category>
+    <pattern>*</pattern>
+    <template>Try saying something else.</template>
+</category>
+<category>
+    <pattern>my name is *</pattern>
+    <template>Hi <set name="firstname"><star/></set></template>
+</category>
+<category>
+    <pattern>What is my name</pattern>
+    <template>Are you testing me? <get name="firstname"></get> 
+</template>
+</category>
+<category>
+    <pattern>What is your name</pattern>
+    <template>My name is Betabot 
+</template>
+</category>
+</aiml>

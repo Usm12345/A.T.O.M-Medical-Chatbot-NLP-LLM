@@ -1,0 +1,231 @@
+body {
+  margin: 0;
+  background-color: #1D1E22;
+  font-size: 16px;
+}
+
+.center-box {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.animated-border-box,
+.animated-border-box-glow {
+  height: 95vh;
+  width: 80vw;
+  position: absolute;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 10px;
+  top: 7vh;
+  left: 10vw;
+  animation: pulsate 100s infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
+
+.animated-border-box-glow {
+  overflow: hidden;
+  /* Glow Blur */
+  filter: blur(20px);
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    filter: blur(20px);
+  }
+  100% {
+    filter: blur(30px);
+  }
+}
+
+.animated-border-box:before,
+.animated-border-box-glow:before {
+  content: '';
+  z-index: -2;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  position: absolute;
+  width: 99999px;
+  height: 99999px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  /* Border color, change middle color */
+  background-image: conic-gradient(rgba(0, 0, 0, 0), #1976ed, rgba(0, 0, 0, 0) 25%);
+  /* Change speed here */
+  animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: translate(-50%, -50%) rotate(1turn);
+  }
+}
+
+.animated-border-box:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  /* Border width */
+  left: 5px;
+  top: 5px;
+  /* Double the px from the border width left */
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  /* Background color */
+  background: #292a2e;
+  /* Box border radius */
+  border-radius: 7px;
+}
+
+/* Chatbot Styles */
+.chat-container {
+  max-width: 100%;
+  height: 90vh;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #292a2e;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.user-input-container {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 1%;
+  width: 80%;
+  max-width: 600px;
+  background-color: #292a2e;
+  border-radius: 5px;
+  padding: 15px;
+  z-index: 1;
+}
+
+.user-input-container .message-form {
+  display: flex;
+  align-items: center;
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  margin-right: 10px;
+  padding: 15px;
+  border: none;
+  outline: none;
+  background-color: #36393f;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"] {
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #1976ed;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  background-color: #1d1e22; /* Darker background color on focus */
+}
+
+button[type="submit"]:hover {
+  background-color: #1359b7;
+}
+
+.chat-log {
+  max-height: calc(80vh - 35px);
+    overflow-y: auto;
+    margin-bottom: 10px;
+    scroll-behavior: smooth;
+    padding-top: 2%;
+}
+
+.chat-log::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+}
+
+.chat-log::-webkit-scrollbar-track {
+  background-color: #555555; /* Set the background color of the scrollbar track */
+}
+
+.chat-log::-webkit-scrollbar-thumb {
+  background-color: #888; /* Set the color of the scrollbar thumb */
+  border-radius: 4px; /* Round the corners of the scrollbar thumb */
+}
+
+.chat-log::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Set the color of the scrollbar thumb on hover */
+}
+
+.messages-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.message-content {
+  padding: 10px;
+  background-color: #1976ed;
+  border-radius: 5px;
+}
+
+.message.received .message-content {
+  background-color: #292a2e;
+}
+
+.message.sent .message-content {
+  background-color: #1976ed;
+}
+
+.message-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.message.received .message-text {
+  color: #ffffff;
+  align-self: flex-start;
+  background-color: #292a2e;
+}
+
+.message.sent .message-text {
+  color: #ffffff; /* White text color */
+  align-self: flex-end; /* Align to the right */
+}
+
+.message-sender {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #777777;
+}
